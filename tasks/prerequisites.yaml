@@ -1,0 +1,28 @@
+---
+
+- name: Backup existing XML GCDS config file
+  ansible.builtin.copy:
+    src: "{{ gcds_config_path }}"
+    dest: "{{ gcds_config_backup_path }}"
+    remote_src: yes
+
+- name: Copy gcds sync script with owner and permissions
+  ansible.builtin.template:
+    src: "{{ gcds_retry_script_path }}"
+    dest: "{{ gcds_cron_sync_script_path }}"
+    owner: "{{ gcds_user }}"
+    group: "{{ gcds_user }}"
+    mode: '0755'
+    force: true
+
+- name: Ensure a cronjob that runs GCDS sync exists
+  ansible.builtin.cron:
+    name: "{{ gcds_cron_job_config.name }}"
+    minute: "{{ gcds_cron_job_config.minute }}"
+    hour: "{{ gcds_cron_job_config.hour }}"
+    day: "{{ gcds_cron_job_config.day }}"
+    month: "{{ gcds_cron_job_config.month }}"
+    weekday: "{{ gcds_cron_job_config.weekday }}"
+    job: "{{ gcds_cron_sync_script_path }} >/dev/null 2>&1"
+    
+...

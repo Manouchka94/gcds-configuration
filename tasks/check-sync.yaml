@@ -1,0 +1,12 @@
+---
+
+- name: Check sync is operational
+  ansible.builtin.shell: "{{ gcds_sync_cli }} --config {{ gcds_config_path }}"
+  until: sync_result.stderr is search(gcds_success_log_msg)
+  register: sync_result
+  retries: 2
+  delay: 5
+  failed_when:
+    - gcds_success_log_msg not in sync_result.stderr
+
+...

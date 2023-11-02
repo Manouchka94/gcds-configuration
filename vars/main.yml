@@ -1,0 +1,18 @@
+---
+
+# GCDS config file path and backup file path
+gcds_config_path: "{{ gcds_install_folder_path }}/{{ gcds_config_file_name }}.xml"
+gcds_config_backup_path: "{{ gcds_install_folder_path }}/{{ gcds_config_file_name }}-backup.xml"
+gcds_config_backup_timestamp_path: "{{ gcds_install_folder_path }}/{{ gcds_config_file_name }}-backup-{{ ansible_date_time.iso8601_basic_short }}.xml"
+gcds_config_backup_timestamp_filename: "{{ gcds_config_file_name }}-backup-{{ ansible_date_time.iso8601_basic_short }}.xml"
+
+# GCDS tool
+gcds_sync_cli: "{{ gcds_install_folder_path }}/sync-cmd"
+
+# Local script
+gcds_retry_script_path: "gcds_synchro_with_retry.j2"
+
+# GCDS success log msg
+gcds_success_log_msg: "Successfully retrieved information from all sources"
+
+...

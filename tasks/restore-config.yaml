@@ -1,0 +1,9 @@
+---
+
+- name: Restore backup XML GCDS config file
+  ansible.builtin.copy:
+    src: "{{ gcds_config_backup_path }}"
+    dest: "{{ gcds_config_path }}"
+    remote_src: yes
+
+...

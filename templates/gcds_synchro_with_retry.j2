@@ -1,0 +1,29 @@
+#!/bin/bash
+
+# Iteration vars
+max_iteration=5
+iteration=1
+
+# change current location to GCDS folder
+cd {{ gcds_install_folder_path }}/
+
+until {{ gcds_install_folder_path }}/sync-cmd --config {{ gcds_install_folder_path }}/{{ gcds_config_file_name }}.xml --apply; [[ $? -eq 0 ]];
+do
+  echo "GCDS sync failed."
+  echo "Retry GCDS Sync - Number $iteration."
+
+  if [[ $iteration -eq $max_iteration ]]
+  then
+    break
+  fi
+
+  sleep 1
+  ((iteration++))
+done
+
+if [[ $iteration -eq $max_iteration ]] && [[ $? -ne 0 ]]
+then
+  echo "All of the $max_iteration trials failed !!!"
+else
+  echo "GCDS Sync is successful !!!"
+fi

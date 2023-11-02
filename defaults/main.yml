@@ -1,0 +1,24 @@
+---
+
+# GCDS installation folder path
+gcds_install_folder_path: "/opt/GoogleCloudDirSync"
+
+# GCDS Config file name
+gcds_config_file_name: "config-gcds"
+
+# GCDS cron job script file path
+gcds_cron_sync_script_path: "{{ gcds_install_folder_path }}/gcds_synchro.sh"
+
+# GCDS cron job configuration
+gcds_cron_job_config:
+  name: "gcds sync"
+  minute: "00"
+  hour: "10"
+  day: "*"
+  month: "*"
+  weekday: "*"
+
+# GCDS user
+gcds_user: "root"
+
+...

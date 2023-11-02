@@ -1,0 +1,45 @@
+---
+
+- name: Rename XML GCDS backup config file
+  ansible.builtin.copy:
+    src: "{{ gcds_config_backup_path }}"
+    dest: "{{ gcds_config_backup_timestamp_path }}"
+    remote_src: yes
+
+- name: Delete OAuth Token from GCDS XML config file
+  ansible.builtin.replace:
+    path: "{{ gcds_config_backup_timestamp_path }}"
+    after: '<oAuth2RefreshToken>'
+    before: '</oAuth2RefreshToken>'
+    regexp: '^(.+)$'
+    replace: ''
+
+- name: Delete LDAP credential from GCDS XML config file
+  ansible.builtin.replace:
+    path: "{{ gcds_config_backup_timestamp_path }}"
+    after: '<authCredentialsEncrypted>'
+    before: '</authCredentialsEncrypted>'
+    regexp: '^(.+)$'
+    replace: ''
+
+- name: Upload backup XML GCDS file to Nexus
+  ansible.builtin.uri:
+    url: "{{ backup_server_url }}/{{ gcds_config_backup_timestamp_filename }}"
+    user: "{{ backup_server_username }}"
+    password: "{{ backup_server_password }}"
+    method: PUT
+    body_format: form-multipart
+    body:
+      file1:
+        filename: "{{ gcds_config_backup_timestamp_path }}"
+        mime_type: application/octet-stream
+      text_form_field: value
+    remote_src: true
+    status_code: 201
+
+- name: Remove backup XML GCDS file
+  ansible.builtin.file:
+    path: "{{ gcds_config_backup_timestamp_path }}"
+    state: absent
+
+...

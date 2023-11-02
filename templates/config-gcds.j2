@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config version="5.0.22" id="977242fe11a24ef8aa65afc4fe92ed80" rev="57419d5233c1439fa0ffca0363e29152" marker="314">
+  <features>
+    <optional>ALIAS_SYNCHRONIZATION</optional>
+    <optional>BASE64_PASSWORD</optional>
+    <optional>CONVERT_FILTERS</optional>
+    <optional>DYNAMIC_GROUPS</optional>
+    <optional>FAMILY_NAME</optional>
+    <optional>GIVEN_NAME</optional>
+    <optional>GOOGLE_QUOTA</optional>
+    <optional>GROUPS</optional>
+    <optional>GROUP_ALIAS_SYNC</optional>
+    <optional>GROUP_DESCRIPTION</optional>
+    <optional>GROUP_MANAGER_POLICY_SYNC</optional>
+    <optional>GROUP_OWNER</optional>
+    <optional>INDEPENDENT_GROUP_SYNC</optional>
+    <optional>MD5_PASSWORD</optional>
+    <optional>MULTIDOMAIN</optional>
+    <optional>NON_ADDRESS_PRIMARY_KEY</optional>
+    <optional>SHA1_PASSWORD</optional>
+    <optional>SKIP_CALENDAR_RESOURCES</optional>
+    <optional>SKIP_CUSTOM_SCHEMAS</optional>
+    <optional>SKIP_IDENTITY_MAPPED_GROUPS</optional>
+    <optional>SKIP_LICENSES</optional>
+    <optional>SKIP_ORGUNITS</optional>
+    <optional>SKIP_SHARED_CONTACTS</optional>
+    <optional>SKIP_SUSPENDING_ADMINS</optional>
+    <optional>SKIP_USER_DELETES</optional>
+    <optional>USER_PROFILES</optional>
+  </features>
+  <logging>
+    <defaultLogLevel>ERROR</defaultLogLevel>
+    <format>[%d{yyyy-MM-dd HH:mm:ss,SSSZ}] [%t] [%p] [%C{3}] %m%n</format>
+    <logFile>{{ gcds_install_folder_path }}/logs/gcds_sync.#{timestamp}.log</logFile>
+    <maximumLogBytes>524288000</maximumLogBytes>
+    <logFileCount>10</logFileCount>
+  </logging>
+  <eventLimits>
+    <deleteLimitPCT_CALENDAR_RESOURCE>5</deleteLimitPCT_CALENDAR_RESOURCE>
+    <deleteLimitCount_GROUP>20</deleteLimitCount_GROUP>
+    <modifyLimitPCT_GROUP>20</modifyLimitPCT_GROUP>
+    <deleteLimitPCT_IDENTITY_MAPPED_GROUP>5</deleteLimitPCT_IDENTITY_MAPPED_GROUP>
+    <deleteLimitPCT_ORG_UNIT>5</deleteLimitPCT_ORG_UNIT>
+    <deleteLimitPCT_SHARED_CONTACT>5</deleteLimitPCT_SHARED_CONTACT>
+    <deleteLimitPCT_USER>10</deleteLimitPCT_USER>
+    <suspendLimitPCT_USER>10</suspendLimitPCT_USER>
+    <modifyMinimumMemberGroupLimit>100</modifyMinimumMemberGroupLimit>
+  </eventLimits>
+  <!--  cache lifetime specified in seconds, default value is 8 days -->
+  <maxCacheLifetime>691200</maxCacheLifetime>
+  <!-- specifies whether to calculate cache lifetime dynamically or not. If set to false, then
+    maxCacheLifetime value is used as cache lifetime. If set to true, then cache lifetime is
+    calculated dynamically -->
+  <useDynamicMaxCacheLifetime>true</useDynamicMaxCacheLifetime>
+  <!-- specifies the filename for storing calendar resource mapping. Its default value is
+    calResMapping.csv -->
+  <calendarResourceMappingFilename>calResMapping.csv</calendarResourceMappingFilename>
+  <maxGroupAliases>100</maxGroupAliases>
+  <!-- Plugin definitions and the individual plugin configurations. -->
+  <plugins>
+    <plugin class="com.google.usersyncapp.plugin.google.GooglePlugin">
+      <config version="0.2">
+        <domain>yourdomain.com</domain>
+        <loginMethod>OAUTH2</loginMethod>
+        <oAuth2RefreshToken>{{ oauth2_refresh_token }}</oAuth2RefreshToken>
+        <oAuth2Scopes>
+          <scope>https://www.google.com/m8/feeds/</scope>
+          <scope>https://www.googleapis.com/auth/admin.directory.group</scope>
+          <scope>https://www.googleapis.com/auth/admin.directory.orgunit</scope>
+          <scope>https://www.googleapis.com/auth/admin.directory.resource.calendar</scope>
+          <scope>https://www.googleapis.com/auth/admin.directory.user</scope>
+          <scope>https://www.googleapis.com/auth/admin.directory.userschema</scope>
+          <scope>https://www.googleapis.com/auth/apps.groups.settings</scope>
+          <scope>https://www.googleapis.com/auth/apps.licensing</scope>
+          <scope>https://www.googleapis.com/auth/plus.me</scope>
+        </oAuth2Scopes>
+        <googleUsersSyncThreads>30</googleUsersSyncThreads>
+        <googleProfilesSyncThreads>30</googleProfilesSyncThreads>
+        <googleContactsSyncThreads>15</googleContactsSyncThreads>
+        <maxIdentityGroupsWriteThreads>90</maxIdentityGroupsWriteThreads>
+        <googleApiReadTimeout>300</googleApiReadTimeout>
+	<nonAddressPrimaryKeyMapFile>{{ gcds_install_folder_path }}/nonAddressPrimaryKeyFile.tsv</nonAddressPrimaryKeyMapFile>
+	<passwordTimestampFile>/opt/passwordTimestampCache.tsv</passwordTimestampFile>
+        <googleCredMachineName>DSP1057404</googleCredMachineName>
+        <maxResults>500</maxResults>
+      </config>
+    </plugin>
+    <plugin class="com.google.usersyncapp.plugin.ldap.LDAPPlugin">
+      <config version="0.2">
+        <serverType>yourServerType</serverType>
+        <connectMethod>SSL</connectMethod>
+        <hostname>yourHostname</hostname>
+        <port>yourPort</port>
+        <basedn>yourBasedn</basedn>
+        <authType>SIMPLE</authType>
+        <authUser>yourAuthUser</authUser>
+        <authCredentialsEncrypted>{{ auth_credentials_encrypted }}</authCredentialsEncrypted>
+        <emailAttrName>mail</emailAttrName>
+        <ldapCredMachineName>yourLdapCredMachineName</ldapCredMachineName>
+        <dominoWhiteSpaceReplaceChar>.</dominoWhiteSpaceReplaceChar>
+        <givenNameAttrName>givenname</givenNameAttrName>
+        <familyNameAttrName>sn</familyNameAttrName>
+        <generatedPasswordLength>8</generatedPasswordLength>
+        <resultsPageSize>1000</resultsPageSize>
+        <orgunits />
+        <users>
+          <search>
+            <priority>1</priority>
+            <suspended>false</suspended>
+            <scope>SUBTREE</scope>
+            <orgMappingAttribute />
+            <filter>yourFilter</filter>
+          </search>
+          <search>
+            <priority>2</priority>
+            <suspended>false</suspended>
+            <scope>SUBTREE</scope>
+            <orgMappingAttribute />
+            <filter>yourFilter</filter>
+          </search>
+          <search>
+            <priority>3</priority>
+            <suspended>false</suspended>
+            <scope>SUBTREE</scope>
+            <orgMappingAttribute />
+            <filter>yourFilter</filter>
+          </search>
+        </users>
+        <groups>
+          <search>
+            <priority>1</priority>
+            <basedn>yourBasedn</basedn>
+            <scope>SUBTREE</scope>
+            <filter>yourFilter</filter>
+            <memberAttrName>uniqueMember</memberAttrName>
+            <groupIdentifierAttr>cn</groupIdentifierAttr>
+            <groupIdentifierPrefix>yourGroupIdentifierPrefix</groupIdentifierPrefix>
+            <groupIdentifierSuffix>yourGroupIdentifierSuffix</groupIdentifierSuffix>
+            <userEmailAttribute>mail</userEmailAttribute>
+          </search>
+          <search>
+            <priority>2</priority>
+            <basedn>yourBasedn</basedn>
+            <scope>SUBTREE</scope>
+            <filter>yourFilter</filter>
+            <memberAttrName>uniqueMember</memberAttrName>
+            <groupIdentifierAttr>cn</groupIdentifierAttr>
+            <groupIdentifierPrefix>yourGroupIdentifierPrefix</groupIdentifierPrefix>
+            <groupIdentifierSuffix>yourGroupIdentifierSuffix</groupIdentifierSuffix>
+            <groupNameWhitespaceReplacement>yourGroupNameWhitespaceReplacement</groupNameWhitespaceReplacement>
+            <userEmailAttribute>mail</userEmailAttribute>
+          </search>
+        </groups>
+        <sharedContacts>
+          <search>
+            <priority>0</priority>
+          </search>
+        </sharedContacts>
+        <userProfiles>
+          <search>
+            <priority>1</priority>
+            <scope>SUBTREE</scope>
+            <primaryEmailAddressAttrName>mail</primaryEmailAddressAttrName>
+            <recoveryEmailAttrName>mail</recoveryEmailAttrName>
+            <filter>yourFilter</filter>
+          </search>
+          <search>
+            <priority>2</priority>
+            <scope>SUBTREE</scope>
+            <primaryEmailAddressAttrName>mail</primaryEmailAddressAttrName>
+            <recoveryEmailAttrName>mail</recoveryEmailAttrName>
+            <filter>yourFilter</filter>
+          </search>
+          <search>
+            <priority>3</priority>
+            <scope>SUBTREE</scope>
+            <primaryEmailAddressAttrName>mail</primaryEmailAddressAttrName>
+            <recoveryEmailAttrName>mail</recoveryEmailAttrName>
+            <filter>yourFilter</filter>
+          </search>
+        </userProfiles>
+        <licenses>
+          <userMailAttributeName />
+          <products>
+            <product id="Google-Apps">
+              <sku id="1010020027" name="Google Workspace Business Starter" />
+              <sku id="1010020028" name="Google Workspace Business Standard" />
+              <sku id="1010020025" name="Google Workspace Business Plus" />
+              <sku id="1010060003" name="Google Workspace Enterprise Essentials" />
+              <sku id="1010020026" name="Google Workspace Enterprise Standard" />
+              <sku id="1010020020" name="Google Workspace Enterprise Plus (formerly G Suite Enterprise)" />
+              <sku id="1010060001" name="Google Workspace Essentials (formerly G Suite Essentials)" />
+              <sku id="1010020030" name="Google Workspace Frontline" />
+              <sku id="Google-Apps-For-Education" name="Google Workspace for Education Fundamentals" />
+              <sku id="Google-Apps-Unlimited" name="G Suite Business" />
+              <sku id="Google-Apps-For-Business" name="G Suite Basic" />
+              <sku id="Google-Apps-Lite" name="G Suite Lite" />
+              <sku id="Google-Apps-For-Postini" name="Google Apps Message Security" />
+            </product>
+            <product id="101031">
+              <sku id="1010310005" name="Google Workspace for Education Standard" />
+              <sku id="1010310006" name="Google Workspace for Education Standard (Staff)" />
+              <sku id="1010310007" name="Google Workspace for Education Standard (Extra Student)" />
+              <sku id="1010310008" name="Google Workspace for Education Plus" />
+              <sku id="1010310009" name="Google Workspace for Education Plus (Staff)" />
+              <sku id="1010310010" name="Google Workspace for Education Plus (Extra Student)" />
+              <sku id="1010310002" name="Google Workspace for Education Plus - Legacy" />
+              <sku id="1010310003" name="Google Workspace for Education Plus - Legacy (Student)" />
+            </product>
+            <product id="101037">
+              <sku id="1010370001" name="Google Workspace for Education: Teaching and Learning Upgrade" />
+            </product>
+            <product id="Google-Drive-storage">
+              <sku id="Google-Drive-storage-20GB" name="Google Drive storage 20 GB" />
+              <sku id="Google-Drive-storage-50GB" name="Google Drive storage 50 GB" />
+              <sku id="Google-Drive-storage-200GB" name="Google Drive storage 200 GB" />
+              <sku id="Google-Drive-storage-400GB" name="Google Drive storage 400 GB" />
+              <sku id="Google-Drive-storage-1TB" name="Google Drive storage 1 TB" />
+              <sku id="Google-Drive-storage-2TB" name="Google Drive storage 2 TB" />
+              <sku id="Google-Drive-storage-4TB" name="Google Drive storage 4 TB" />
+              <sku id="Google-Drive-storage-8TB" name="Google Drive storage 8 TB" />
+              <sku id="Google-Drive-storage-16TB" name="Google Drive storage 16 TB" />
+            </product>
+            <product id="Google-Vault">
+              <sku id="Google-Vault" name="Google Vault" />
+              <sku id="Google-Vault-Former-Employee" name="Google Vault - Former Employee" />
+            </product>
+            <product id="101005">
+              <sku id="1010050001" name="Cloud Identity Premium" />
+            </product>
+            <product id="101033">
+              <sku id="1010330003" name="Google Voice Starter" />
+              <sku id="1010330004" name="Google Voice Standard" />
+              <sku id="1010330002" name="Google Voice Premier" />
+            </product>
+          </products>
+          <rules />
+        </licenses>
+        <schemas>
+          <schemaDefinitions />
+          <schemaHistory />
+          <binaryAttributesEncoding>BASE64_URL_NOPADDING</binaryAttributesEncoding>
+        </schemas>
+      </config>
+    </plugin>
+  </plugins>
+</config>

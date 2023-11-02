@@ -1,0 +1,19 @@
+galaxy_info:
+  role_name: "gcds_configuration"
+  author: Emmanuel DRECQ
+  company: "EDF, SA"
+  description: This role configure GCDS (Google Cloud Directory Sync) tools based on Jinja template of XML config file.
+  company: EDF
+
+  license: license BSD
+
+  min_ansible_version: 2.1
+
+  platforms:
+    - name: RHEL
+      versions:
+        - 8.4 (Ootpa)
+        
+  galaxy_tags:
+    - GCDS
+    - GCP

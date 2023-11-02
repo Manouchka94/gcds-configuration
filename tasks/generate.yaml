@@ -1,0 +1,12 @@
+---
+
+- name: Generate GCDS XML configuration file
+  ansible.builtin.template:
+    src: config-gcds.j2
+    dest: "{{ gcds_config_path }}"
+    owner: "{{ gcds_user }}"
+    group: "{{ gcds_user }}"
+    mode: '0644'
+    force: true
+
+...

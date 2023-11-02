@@ -1,0 +1,29 @@
+---
+
+- name: Check prerequisites
+  ansible.builtin.include_tasks:
+    file: prerequisites.yaml
+
+- name: Generate GCDS config file
+  ansible.builtin.include_tasks:
+    file: generate.yaml
+
+- name: Check GCDS Sync with new config
+  ansible.builtin.include_tasks:
+    file: check-sync.yaml
+
+# GCDS Sync test OK
+- name: Save GCDS previous config
+  ansible.builtin.include_tasks:
+    file: save-config.yaml
+  when:
+    - gcds_success_log_msg in sync_result.stderr
+    - backup_server_url != ""
+
+# GCDS Sync test KO
+- name: Save GCDS previous config
+  ansible.builtin.include_tasks:
+    file: restore-config.yaml
+  when: gcds_success_log_msg not in sync_result.stderr
+
+...
